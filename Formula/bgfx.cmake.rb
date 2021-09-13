@@ -6,6 +6,13 @@ class BgfxCmake < Formula
   license "CC0-1.0"
   head "https://github.com/bkaradzic/bgfx.cmake.git", branch: "master"
 
+  bottle do
+    root_url "https://github.com/jsm174/homebrew-bgfx/releases/download/bgfx.cmake-16"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, big_sur:  "256fc0219fd387fd76a7593e3bdbb9628273faef71bf9b493f0bca6d2858fc29"
+    sha256 cellar: :any_skip_relocation, catalina: "f0836bbcab71cd7abf6e16c747dfc801ad5d1b7efc78772533b3e8d3a53fef81"
+  end
+
   depends_on "cmake" => :build
 
   resource "bgfx" do
