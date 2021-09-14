@@ -5,16 +5,13 @@ class Bgfx < Formula
   version "1.115.7816"
   sha256 "f6808e6011e93470d1c60be6d371e905e5c703067dc0ee21b7c8943c60f8e042"
   license "BSD-2-Clause"
-  revision 1
   head "https://github.com/bkaradzic/bgfx.git", branch: "master"
 
-  bottle do
-    root_url "https://github.com/jsm174/homebrew-bgfx/releases/download/bgfx-1.115.7816_1"
-    sha256 cellar: :any_skip_relocation, big_sur:  "12c160be10d6d179813deab60400b8bcef906aed0fefd3f7d22f76acfaf38679"
-    sha256 cellar: :any_skip_relocation, catalina: "6bb0a7bb5acf8b73c31ab63e2b65704f86eed303ea3eea4a965cfd82a4d7b94b"
-  end
-
   depends_on "cmake" => :build
+
+  on_linux do
+    depends_on "mesa"
+  end
 
   resource "bimg" do
     url "https://github.com/bkaradzic/bimg/archive/6693de0e50ff7e76a22d6f37251fa2dec12168cd.tar.gz"
@@ -35,7 +32,7 @@ class Bgfx < Formula
     (buildpath/"bgfx").install Dir["*"]
     (buildpath/"bimg").install resource("bimg")
     (buildpath/"bx").install resource("bx")
-    (buildpath/"").install resource("bgfx.cmake")
+    buildpath.install resource("bgfx.cmake")
 
     mkdir "build" do
       system "cmake", "..", *std_cmake_args
@@ -44,6 +41,34 @@ class Bgfx < Formula
   end
 
   test do
-    system "#{bin}/shaderc", "-v"
+    (testpath/"test.cpp").write <<~EOS
+      #include <bx/bx.h>
+      #include <bgfx/bgfx.h>
+      #include <bgfx/platform.h>
+      int main(void) {
+        bgfx::renderFrame();
+        bgfx::Init init;
+        init.type = bgfx::RendererType::Noop;
+        init.resolution.width = 100;
+        init.resolution.height = 100;
+        init.resolution.reset = BGFX_RESET_VSYNC;
+        bgfx::init(init);
+        bgfx::shutdown();
+        return 0;
+      }
+    EOS
+    flags = %W[
+      -I#{include}
+      -L#{lib}
+      -lbgfx
+      -lbx
+      -lbimg
+      -lastc-codec
+      -framework AppKit
+      -framework Metal
+      -framework QuartzCore
+    ]
+    system ENV.cxx, "-std=c++17", "test.cpp", "-o", "test", *flags
+    system "./test"
   end
 end
