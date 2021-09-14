@@ -7,6 +7,12 @@ class Bgfx < Formula
   license "BSD-2-Clause"
   head "https://github.com/bkaradzic/bgfx.git", branch: "master"
 
+  bottle do
+    root_url "https://github.com/jsm174/homebrew-bgfx/releases/download/bgfx-1.115.7816"
+    sha256 cellar: :any_skip_relocation, big_sur:  "5db79d3481e7731a06587277606bd2dc54a0c240ea83aa050ab7360f0c393538"
+    sha256 cellar: :any_skip_relocation, catalina: "84ec8151cdf6d3767c95192cbb250e2c639b24c566dc15aef0b19bba1c5004de"
+  end
+
   depends_on "cmake" => :build
 
   on_linux do
