@@ -8,6 +8,12 @@ class Bgfx < Formula
   revision 1
   head "https://github.com/bkaradzic/bgfx.git", branch: "master"
 
+  bottle do
+    root_url "https://github.com/jsm174/homebrew-bgfx/releases/download/bgfx-1.115.7816_1"
+    sha256 cellar: :any_skip_relocation, big_sur:  "12c160be10d6d179813deab60400b8bcef906aed0fefd3f7d22f76acfaf38679"
+    sha256 cellar: :any_skip_relocation, catalina: "6bb0a7bb5acf8b73c31ab63e2b65704f86eed303ea3eea4a965cfd82a4d7b94b"
+  end
+
   depends_on "cmake" => :build
 
   resource "bimg" do
